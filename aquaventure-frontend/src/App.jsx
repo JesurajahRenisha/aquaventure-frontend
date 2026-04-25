@@ -1,19 +1,23 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+import HomePage from './pages/HomePage'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [page, setPage] = useState(() => (localStorage.getItem('authToken') ? 'home' : 'login'))
+
+  const authEmail = localStorage.getItem('authEmail')
+
+  if (page === 'home') {
+    return <HomePage userEmail={authEmail} onLogout={() => setPage('login')} />
+  }
+
+  if (page === 'register') {
+    return <RegisterPage onSignIn={() => setPage('login')} onRegisterSuccess={() => setPage('home')} />
+  }
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <img src={reactLogo} alt="React logo" width="80" />
-      <h1>Welcome to Aquaventure</h1>
-
-      <button onClick={() => setCount(count + 1)}>
-        Count is {count}
-      </button>
-    </div>
+    <LoginPage onCreateAccount={() => setPage('register')} onLoginSuccess={() => setPage('home')} />
   )
 }
 

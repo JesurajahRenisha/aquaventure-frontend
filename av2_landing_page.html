@@ -1,0 +1,247 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--ink:#0a1628;--ocean:#0e4f6e;--wave:#1a8c6b;--sand:#f7f0e3;--coral:#c94a2a;--foam:#e8f5f0;--mist:#f2f8fc}
+body{font-family:'Inter',sans-serif;background:#fff;color:var(--ink);overflow-x:hidden}
+
+nav{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 3rem;background:rgba(10,22,40,0.97);position:sticky;top:0;z-index:100}
+.nl{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:#fff;font-weight:600;letter-spacing:-0.02em}
+.nl em{color:#5DCAA5;font-style:normal}
+.nm{display:flex;gap:2rem;list-style:none}
+.nm a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:0.85rem;font-weight:400;transition:color .2s}
+.nm a:hover{color:#fff}
+.ncta{background:#c94a2a;color:#fff;padding:.55rem 1.5rem;border-radius:4px;font-size:.85rem;font-weight:500;border:none;cursor:pointer;letter-spacing:.02em}
+
+.hero{background:#0a1628;min-height:92vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:0 3rem;position:relative;overflow:hidden}
+.hero-waves{position:absolute;bottom:0;left:0;right:0}
+.hero-left{position:relative;z-index:2;padding-right:2rem}
+.h-eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(93,202,165,.4);border-radius:2px;padding:.35rem 1rem;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:#5DCAA5;margin-bottom:1.8rem}
+.h-dot{width:6px;height:6px;border-radius:50%;background:#5DCAA5}
+h1{font-family:'Cormorant Garamond',serif;font-size:4.2rem;color:#fff;line-height:1.05;font-weight:700;margin-bottom:1.4rem;letter-spacing:-.02em}
+h1 span{color:#5DCAA5}
+.h-desc{font-size:1rem;color:rgba(255,255,255,.6);line-height:1.85;font-weight:300;max-width:440px;margin-bottom:2.2rem}
+.h-btns{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-a{background:#c94a2a;color:#fff;padding:.85rem 2.2rem;border-radius:4px;font-size:.88rem;font-weight:500;border:none;cursor:pointer;transition:opacity .2s}
+.btn-a:hover{opacity:.88}
+.btn-b{background:transparent;color:#fff;padding:.85rem 2.2rem;border-radius:4px;font-size:.88rem;border:1px solid rgba(255,255,255,.3);cursor:pointer;transition:border-color .2s}
+.btn-b:hover{border-color:#fff}
+.hero-right{position:relative;z-index:2;display:flex;flex-direction:column;gap:1rem}
+.hcard{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:1.3rem 1.5rem}
+.hc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.hc-label{font-size:.72rem;color:rgba(255,255,255,.45);letter-spacing:.06em;text-transform:uppercase}
+.safe-tag{background:rgba(26,140,107,.25);border:1px solid rgba(26,140,107,.5);color:#5DCAA5;font-size:.7rem;padding:.22rem .7rem;border-radius:2px;letter-spacing:.04em}
+.w-row{display:flex;align-items:center;gap:1rem;margin-bottom:1rem}
+.w-temp{font-family:'Cormorant Garamond',serif;font-size:3rem;color:#fff;font-weight:600}
+.w-detail{font-size:.8rem;color:rgba(255,255,255,.55);line-height:1.6}
+.w-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem}
+.ws{background:rgba(255,255,255,.05);border-radius:6px;padding:.5rem .6rem}
+.ws-l{font-size:.65rem;color:rgba(255,255,255,.35);margin-bottom:2px}
+.ws-v{font-size:.82rem;color:#fff;font-weight:500}
+.qbook-title{font-size:.72rem;color:rgba(255,255,255,.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.8rem}
+.pills{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.9rem}
+.pill{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.15);padding:.3rem .85rem;border-radius:2px;font-size:.78rem;cursor:pointer;transition:all .15s}
+.pill.on,.pill:hover{background:#c94a2a;border-color:#c94a2a;color:#fff}
+.qbtn{width:100%;background:#1a8c6b;color:#fff;border:none;padding:.7rem;border-radius:6px;font-size:.88rem;font-weight:500;cursor:pointer;transition:opacity .2s}
+.qbtn:hover{opacity:.88}
+
+.statsbar{background:#0e4f6e;display:grid;grid-template-columns:repeat(4,1fr);padding:1.6rem 3rem}
+.sb-item{text-align:center;border-right:1px solid rgba(255,255,255,.1)}
+.sb-item:last-child{border-right:none}
+.sb-num{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:#5DCAA5;font-weight:700}
+.sb-lbl{font-size:.75rem;color:rgba(255,255,255,.45);margin-top:3px}
+
+section.acts{padding:5rem 3rem;background:#fff}
+.sec-tag{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:#c94a2a;font-weight:500;margin-bottom:.7rem}
+.sec-h{font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:#0a1628;font-weight:700;margin-bottom:.7rem;letter-spacing:-.01em}
+.sec-sub{font-size:.92rem;color:#666;line-height:1.75;max-width:500px;margin-bottom:3rem}
+.acts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.acard{background:#fff;border:1px solid #e8e8e8;border-radius:10px;overflow:hidden;cursor:pointer;transition:transform .22s,border-color .22s}
+.acard:hover{transform:translateY(-5px);border-color:#1a8c6b}
+.acard-top{height:160px;display:flex;align-items:center;justify-content:center;font-size:3.5rem;position:relative}
+.abadge{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.4);color:#fff;font-size:.65rem;padding:.2rem .6rem;border-radius:2px;letter-spacing:.04em}
+.acard-body{padding:1.1rem}
+.acard-name{font-weight:500;font-size:.95rem;color:#0a1628;margin-bottom:3px}
+.acard-prov{font-size:.75rem;color:#999;margin-bottom:.6rem}
+.acard-row{display:flex;justify-content:space-between;align-items:center}
+.acard-price{font-weight:500;color:#c94a2a;font-size:.92rem}
+.acard-rat{font-size:.75rem;color:#888}
+.acard-btn{background:#0a1628;color:#fff;border:none;padding:.45rem 1rem;border-radius:4px;font-size:.78rem;cursor:pointer;transition:background .2s}
+.acard-btn:hover{background:#c94a2a}
+
+section.how{background:var(--sand);padding:5rem 3rem}
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-top:3rem}
+.step{padding:1.8rem 1.2rem}
+.step-n{width:40px;height:40px;border-radius:50%;background:#0a1628;color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.2rem;display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem;font-weight:600}
+.step-ico{font-size:1.6rem;margin-bottom:.8rem}
+.step h4{font-weight:500;color:#0a1628;font-size:.95rem;margin-bottom:.4rem}
+.step p{font-size:.82rem;color:#666;line-height:1.65}
+
+section.reviews{background:#0a1628;padding:5rem 3rem}
+.rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:3rem}
+.rcard{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:1.5rem}
+.rcard-stars{color:#EF9F27;font-size:.88rem;margin-bottom:.8rem}
+.rcard-text{font-size:.85rem;color:rgba(255,255,255,.7);line-height:1.75;margin-bottom:1.1rem;font-style:italic}
+.rcard-bot{display:flex;align-items:center;gap.8rem}
+.rav{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:500;color:#fff;margin-right:9px}
+.rname{font-size:.83rem;color:#fff;font-weight:500}
+.rcountry{font-size:.72rem;color:rgba(255,255,255,.35);margin-top:1px}
+
+section.cta{background:#1a8c6b;padding:4rem 3rem;display:flex;justify-content:space-between;align-items:center}
+.cta-l h2{font-family:'Cormorant Garamond',serif;font-size:2.2rem;color:#fff;font-weight:700;margin-bottom:.5rem}
+.cta-l p{font-size:.88rem;color:rgba(255,255,255,.7);line-height:1.7}
+.cta-btn{background:#fff;color:#0a1628;padding:.9rem 2.5rem;border-radius:4px;font-size:.9rem;font-weight:500;border:none;cursor:pointer;white-space:nowrap;transition:opacity .2s}
+.cta-btn:hover{opacity:.88}
+
+footer{background:#060e1a;padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center}
+.fl{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:#fff;font-weight:600}
+.fl em{color:#5DCAA5;font-style:normal}
+.flinks{display:flex;gap:1.8rem}
+.flinks a{color:rgba(255,255,255,.35);text-decoration:none;font-size:.78rem;transition:color .2s}
+.flinks a:hover{color:#fff}
+.fcopy{font-size:.72rem;color:rgba(255,255,255,.2)}
+</style>
+
+<nav>
+  <div class="nl">Aqua<em>Venture</em></div>
+  <ul class="nm"><li><a href="#">Activities</a></li><li><a href="#">Providers</a></li><li><a href="#">Safety</a></li><li><a href="#">About</a></li></ul>
+  <button class="ncta" onclick="sendPrompt('I want to book a beach activity at Arugam Bay')">Book now</button>
+</nav>
+
+<div class="hero">
+  <div class="hero-left">
+    <div class="h-eyebrow"><div class="h-dot"></div>Arugam Bay · Sri Lanka</div>
+    <h1>Ride the waves,<br>your way.<br><span>Safely.</span></h1>
+    <p class="h-desc">Discover, compare and book surfing, dolphin watching, snorkeling and more — all through one trusted platform built for Arugam Bay.</p>
+    <div class="h-btns">
+      <button class="btn-a" onclick="sendPrompt('Show me all available activities at Arugam Bay')">Explore activities</button>
+      <button class="btn-b">How it works</button>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hcard">
+      <div class="hc-top"><div class="hc-label">Today — Arugam Bay</div><div class="safe-tag">Safe to surf</div></div>
+      <div class="w-row"><div class="w-temp">29°C</div><div class="w-detail">Partly cloudy<br>Low swells · Good visibility</div></div>
+      <div class="w-stats">
+        <div class="ws"><div class="ws-l">Wave ht.</div><div class="ws-v">1.2 m</div></div>
+        <div class="ws"><div class="ws-l">Wind</div><div class="ws-v">12 km/h</div></div>
+        <div class="ws"><div class="ws-l">UV</div><div class="ws-v">High</div></div>
+        <div class="ws"><div class="ws-l">Visibility</div><div class="ws-v">Excellent</div></div>
+      </div>
+    </div>
+    <div class="hcard">
+      <div class="qbook-title">Quick book</div>
+      <div class="pills">
+        <div class="pill on" onclick="setPill(this)">Surfing</div>
+        <div class="pill" onclick="setPill(this)">Dolphins</div>
+        <div class="pill" onclick="setPill(this)">Turtles</div>
+        <div class="pill" onclick="setPill(this)">Snorkeling</div>
+        <div class="pill" onclick="setPill(this)">Kayaking</div>
+        <div class="pill" onclick="setPill(this)">Diving</div>
+      </div>
+      <button class="qbtn" onclick="sendPrompt('I want to book a surfing session at Arugam Bay')">Check availability →</button>
+    </div>
+  </div>
+  <svg class="hero-waves" viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,40 C480,80 960,0 1440,40 L1440,80 L0,80 Z" fill="#fff"/>
+  </svg>
+</div>
+
+<div class="statsbar">
+  <div class="sb-item"><div class="sb-num">1,200+</div><div class="sb-lbl">Happy adventurers</div></div>
+  <div class="sb-item"><div class="sb-num">18</div><div class="sb-lbl">Verified providers</div></div>
+  <div class="sb-item"><div class="sb-num">6</div><div class="sb-lbl">Unique activities</div></div>
+  <div class="sb-item"><div class="sb-num">4.9★</div><div class="sb-lbl">Average rating</div></div>
+</div>
+
+<section class="acts">
+  <div class="sec-tag">What we offer</div>
+  <div class="sec-h">Explore all activities</div>
+  <div class="sec-sub">Handpicked experiences with verified local providers — every booking includes safety checks and honest reviews.</div>
+  <div class="acts-grid">
+    <div class="acard" onclick="sendPrompt('Tell me more about surfing lessons at Arugam Bay')">
+      <div class="acard-top" style="background:#0e4f6e"><span>🏄</span><div class="abadge">Most popular</div></div>
+      <div class="acard-body">
+        <div class="acard-name">Surfing lessons</div>
+        <div class="acard-prov">Ravi's Wave School · Verified</div>
+        <div class="acard-row"><div><div class="acard-price">From $25</div><div class="acard-rat">★ 4.9 · 128 reviews</div></div><button class="acard-btn">Book</button></div>
+      </div>
+    </div>
+    <div class="acard" onclick="sendPrompt('Tell me about dolphin watching at Arugam Bay')">
+      <div class="acard-top" style="background:#185FA5"><span>🐬</span><div class="abadge">Morning only</div></div>
+      <div class="acard-body">
+        <div class="acard-name">Dolphin watching</div>
+        <div class="acard-prov">Bay Adventures · Verified</div>
+        <div class="acard-row"><div><div class="acard-price">From $35</div><div class="acard-rat">★ 4.8 · 94 reviews</div></div><button class="acard-btn">Book</button></div>
+      </div>
+    </div>
+    <div class="acard" onclick="sendPrompt('Tell me about turtle watching at Arugam Bay')">
+      <div class="acard-top" style="background:#3B6D11"><span>🐢</span><div class="abadge">Seasonal</div></div>
+      <div class="acard-body">
+        <div class="acard-name">Turtle watching</div>
+        <div class="acard-prov">Eco Beach Tours · Verified</div>
+        <div class="acard-row"><div><div class="acard-price">From $20</div><div class="acard-rat">★ 4.7 · 61 reviews</div></div><button class="acard-btn">Book</button></div>
+      </div>
+    </div>
+    <div class="acard" onclick="sendPrompt('Tell me about snorkeling at Arugam Bay')">
+      <div class="acard-top" style="background:#0C6B8A"><span>🤿</span></div>
+      <div class="acard-body">
+        <div class="acard-name">Snorkeling tour</div>
+        <div class="acard-prov">Ocean Explorer LK · Verified</div>
+        <div class="acard-row"><div><div class="acard-price">From $30</div><div class="acard-rat">★ 4.8 · 77 reviews</div></div><button class="acard-btn">Book</button></div>
+      </div>
+    </div>
+    <div class="acard" onclick="sendPrompt('Tell me about sea kayaking at Arugam Bay')">
+      <div class="acard-top" style="background:#854F0B"><span>🛶</span></div>
+      <div class="acard-body">
+        <div class="acard-name">Sea kayaking</div>
+        <div class="acard-prov">Surf Lanka Guides</div>
+        <div class="acard-row"><div><div class="acard-price">From $28</div><div class="acard-rat">★ 4.6 · 43 reviews</div></div><button class="acard-btn">Book</button></div>
+      </div>
+    </div>
+    <div class="acard" onclick="sendPrompt('Tell me about scuba diving at Arugam Bay')">
+      <div class="acard-top" style="background:#26215C"><span>🌊</span><div class="abadge">Certified req.</div></div>
+      <div class="acard-body">
+        <div class="acard-name">Scuba diving</div>
+        <div class="acard-prov">Deep Blue Divers · Verified</div>
+        <div class="acard-row"><div><div class="acard-price">From $60</div><div class="acard-rat">★ 4.9 · 38 reviews</div></div><button class="acard-btn">Book</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how">
+  <div class="sec-tag">Simple process</div>
+  <div class="sec-h">How AquaVenture works</div>
+  <div class="steps-grid">
+    <div class="step"><div class="step-n">1</div><div class="step-ico">🔍</div><h4>Browse activities</h4><p>Explore surfing, dolphins, snorkeling and more with real photos and verified reviews.</p></div>
+    <div class="step"><div class="step-n">2</div><div class="step-ico">📅</div><h4>Pick your slot</h4><p>Check real-time availability and live weather safety ratings before committing.</p></div>
+    <div class="step"><div class="step-n">3</div><div class="step-ico">💳</div><h4>Book securely</h4><p>Pay safely online. Instant email confirmation with safety briefing included.</p></div>
+    <div class="step"><div class="step-n">4</div><div class="step-ico">🌊</div><h4>Dive in!</h4><p>Meet your verified local guide and experience Arugam Bay like never before.</p></div>
+  </div>
+</section>
+
+<section class="reviews">
+  <div class="sec-tag" style="color:#5DCAA5">Guest stories</div>
+  <div class="sec-h" style="color:#fff">Trusted by adventurers worldwide</div>
+  <div class="rev-grid">
+    <div class="rcard"><div class="rcard-stars">★★★★★</div><div class="rcard-text">"Booked a surf lesson through AquaVenture — the safety notifications were a brilliant touch. Best experience of our Sri Lanka trip."</div><div class="rcard-bot"><div class="rav" style="background:#378ADD">SA</div><div><div class="rname">Sarah A.</div><div class="rcountry">🇬🇧 United Kingdom</div></div></div></div>
+    <div class="rcard"><div class="rcard-stars">★★★★★</div><div class="rcard-text">"Dolphin watching was breathtaking. Easy booking, great guides, everything ran on time. Will definitely use AquaVenture again."</div><div class="rcard-bot"><div class="rav" style="background:#3B6D11">MK</div><div><div class="rname">Marco K.</div><div class="rcountry">🇩🇪 Germany</div></div></div></div>
+    <div class="rcard"><div class="rcard-stars">★★★★★</div><div class="rcard-text">"A platform that shows real reviews and verified guides — felt completely safe the whole time. Highly recommend for solo travellers."</div><div class="rcard-bot"><div class="rav" style="background:#993556">PT</div><div><div class="rname">Priya T.</div><div class="rcountry">🇦🇺 Australia</div></div></div></div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="cta-l"><h2>Ready for your ocean adventure?</h2><p>Join 1,200+ travellers who've explored Arugam Bay safely through AquaVenture.</p></div>
+  <button class="cta-btn" onclick="sendPrompt('I want to sign up for AquaVenture and start booking activities')">Get started today →</button>
+</section>
+
+<footer>
+  <div class="fl">Aqua<em>Venture</em></div>
+  <div class="flinks"><a href="#">Activities</a><a href="#">Providers</a><a href="#">Safety</a><a href="#">Support</a><a href="#">Privacy</a></div>
+  <div class="fcopy">© 2026 AquaVenture · Arugam Bay, Sri Lanka</div>
+</footer>
+
+<script>
+function setPill(el){document.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));el.classList.add('on')}
+</script>
