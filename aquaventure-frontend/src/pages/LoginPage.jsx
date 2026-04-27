@@ -22,10 +22,10 @@ function LoginPage({ onCreateAccount, onLoginSuccess }) {
     setStatus({ message: '', isError: false })
 
     try {
-      const response = await login(form)
-      const token = response.data
-      localStorage.setItem('authToken', token)
+      const user = await login(form)
+      localStorage.setItem('authToken', user.token)
       localStorage.setItem('authEmail', form.email)
+      localStorage.setItem('userRole', user.role)
       setStatus({ message: 'Signed in successfully.', isError: false })
       onLoginSuccess?.()
     } catch (error) {

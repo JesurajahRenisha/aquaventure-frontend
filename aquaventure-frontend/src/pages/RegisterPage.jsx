@@ -28,9 +28,10 @@ function RegisterPage({ onSignIn, onRegisterSuccess }) {
     setStatus({ message: '', isError: false })
 
     try {
-      await register(form)
+      await register({ ...form, role })
       setStatus({ message: 'Account created. You can now sign in.', isError: false })
       localStorage.setItem('authEmail', form.email)
+      localStorage.setItem('userRole', role)
       onRegisterSuccess?.()
     } catch (error) {
       const apiData = error.response?.data
@@ -56,7 +57,7 @@ function RegisterPage({ onSignIn, onRegisterSuccess }) {
           onClick={() => setRole('tourist')}
           type="button"
         >
-          <div className="auth-role-icon">Tourist</div>
+          <div className="auth-role-icon">🏖️</div>
           <div className="auth-role-name">Tourist</div>
           <div className="auth-role-description">Browse and book activities</div>
         </button>
@@ -66,9 +67,19 @@ function RegisterPage({ onSignIn, onRegisterSuccess }) {
           onClick={() => setRole('provider')}
           type="button"
         >
-          <div className="auth-role-icon">Provider</div>
+          <div className="auth-role-icon">🏄</div>
           <div className="auth-role-name">Provider</div>
           <div className="auth-role-description">List and manage services</div>
+        </button>
+
+        <button
+          className={`auth-role ${role === 'admin' ? 'active' : ''}`}
+          onClick={() => setRole('admin')}
+          type="button"
+        >
+          <div className="auth-role-icon">⚙️</div>
+          <div className="auth-role-name">Admin</div>
+          <div className="auth-role-description">Manage platform operations</div>
         </button>
       </div>
 
