@@ -264,6 +264,18 @@
   color: #c94a2a;
 }
 
+.auth-field input.error {
+  border-color: #c94a2a;
+  background: rgba(201, 74, 42, 0.05);
+}
+
+.field-error {
+  color: #c94a2a;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
 .auth-divider {
   display: flex;
   align-items: center;
