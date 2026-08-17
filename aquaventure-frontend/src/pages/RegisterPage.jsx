@@ -10,17 +10,70 @@ function RegisterPage({ onSignIn, onRegisterSuccess }) {
     email: '',
     password: '',
   })
+  const [errors, setErrors] = useState({})
   const [status, setStatus] = useState({ message: '', isError: false })
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const validateField = (name, value) => {
+    const fieldErrors = {}
+
+    switch (name) {
+      case 'firstname':
+      case 'lastname':
+        if (!value.trim()) {
+          fieldErrors[name] = 'This field is required'
+        } else if (value.length < 2 || value.length > 50) {
+          fieldErrors[name] = 'Must be between 2 and 50 characters'
+        } else if (!/^[a-zA-Z\s]+$/.test(value)) {
+          fieldErrors[name] = 'Only letters and spaces allowed'
+        }
+        break
+      case 'email':
+        if (!value.trim()) {
+          fieldErrors.email = 'Email is required'
+        } else if (value.length > 100) {
+          fieldErrors.email = 'Email must be less than 100 characters'
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          fieldErrors.email = 'Please enter a valid email address'
+        }
+        break
+      case 'password':
+        if (!value) {
+          fieldErrors.password = 'Password is required'
+        } else if (value.length < 8 || value.length > 100) {
+          fieldErrors.password = 'Password must be between 8 and 100 characters'
+        } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/.test(value)) {
+          fieldErrors.password = 'Password must contain uppercase, lowercase, number, and special character'
+        }
+        break
+    }
+
+    return fieldErrors
+  }
+
+  const validateForm = () => {
+    const allErrors = {}
+    Object.keys(form).forEach(key => {
+      const fieldErrors = validateField(key, form[key])
+      Object.assign(allErrors, fieldErrors)
+    })
+    setErrors(allErrors)
+    return Object.keys(allErrors).length === 0
+  }
 
   const handleChange = (event) => {
     const { name, value } = event.target
     setForm((current) => ({ ...current, [name]: value }))
+
+    // Clear field error on change
+    if (errors[name]) {
+      setErrors((current) => ({ ...current, [name]: '' }))
+    }
   }
 
   const handleSubmit = async () => {
-    if (!form.firstname || !form.lastname || !form.email || !form.password) {
-      setStatus({ message: 'Please fill all required fields.', isError: true })
+    if (!validateForm()) {
+      setStatus({ message: 'Please correct the errors below.', isError: true })
       return
     }
 
@@ -28,18 +81,28 @@ function RegisterPage({ onSignIn, onRegisterSuccess }) {
     setStatus({ message: '', isError: false })
 
     try {
-      await register(form)
+      await register({ ...form, role })
       setStatus({ message: 'Account created. You can now sign in.', isError: false })
       localStorage.setItem('authEmail', form.email)
+      localStorage.setItem('userRole', role)
       onRegisterSuccess?.()
     } catch (error) {
       const apiData = error.response?.data
-      const message =
-        (typeof apiData === 'string' && apiData) ||
-        apiData?.message ||
-        apiData?.error ||
-        'Registration failed. Please try again.'
-      setStatus({ message, isError: true })
+
+      if (apiData?.errors) {
+        // Field-level errors from backend
+        setErrors(apiData.errors)
+        setStatus({ message: 'Please correct the validation errors.', isError: true })
+      } else {
+        // General error
+        const message =
+          (typeof apiData === 'string' && apiData) ||
+          apiData?.message ||
+          apiData?.error ||
+          'Registration failed. Please try again.'
+        setStatus({ message, isError: true })
+        setErrors({})
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -56,7 +119,7 @@ function RegisterPage({ onSignIn, onRegisterSuccess }) {
           onClick={() => setRole('tourist')}
           type="button"
         >
-          <div className="auth-role-icon">Tourist</div>
+          <div className="auth-role-icon">🏖️</div>
           <div className="auth-role-name">Tourist</div>
           <div className="auth-role-description">Browse and book activities</div>
         </button>
@@ -66,9 +129,19 @@ function RegisterPage({ onSignIn, onRegisterSuccess }) {
           onClick={() => setRole('provider')}
           type="button"
         >
-          <div className="auth-role-icon">Provider</div>
+          <div className="auth-role-icon">🏄</div>
           <div className="auth-role-name">Provider</div>
           <div className="auth-role-description">List and manage services</div>
+        </button>
+
+        <button
+          className={`auth-role ${role === 'admin' ? 'active' : ''}`}
+          onClick={() => setRole('admin')}
+          type="button"
+        >
+          <div className="auth-role-icon">⚙️</div>
+          <div className="auth-role-name">Admin</div>
+          <div className="auth-role-description">Manage platform operations</div>
         </button>
       </div>
 
@@ -82,7 +155,9 @@ function RegisterPage({ onSignIn, onRegisterSuccess }) {
             placeholder="Kasun"
             value={form.firstname}
             onChange={handleChange}
+            className={errors.firstname ? 'error' : ''}
           />
+          {errors.firstname && <span className="field-error">{errors.firstname}</span>}
         </div>
 
         <div className="auth-field">
@@ -94,7 +169,9 @@ function RegisterPage({ onSignIn, onRegisterSuccess }) {
             placeholder="Perera"
             value={form.lastname}
             onChange={handleChange}
+            className={errors.lastname ? 'error' : ''}
           />
+          {errors.lastname && <span className="field-error">{errors.lastname}</span>}
         </div>
       </div>
 
@@ -107,7 +184,9 @@ function RegisterPage({ onSignIn, onRegisterSuccess }) {
           placeholder="you@email.com"
           value={form.email}
           onChange={handleChange}
+          className={errors.email ? 'error' : ''}
         />
+        {errors.email && <span className="field-error">{errors.email}</span>}
       </div>
 
       <div className="auth-field">
@@ -119,7 +198,9 @@ function RegisterPage({ onSignIn, onRegisterSuccess }) {
           placeholder="Min. 8 characters"
           value={form.password}
           onChange={handleChange}
+          className={errors.password ? 'error' : ''}
         />
+        {errors.password && <span className="field-error">{errors.password}</span>}
       </div>
 
       <button className="auth-submit" type="button" onClick={handleSubmit} disabled={isSubmitting}>

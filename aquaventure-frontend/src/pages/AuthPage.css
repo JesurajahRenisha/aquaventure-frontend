@@ -264,6 +264,18 @@
   color: #c94a2a;
 }
 
+.auth-field input.error {
+  border-color: #c94a2a;
+  background: rgba(201, 74, 42, 0.05);
+}
+
+.field-error {
+  color: #c94a2a;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
 .auth-divider {
   display: flex;
   align-items: center;
@@ -331,7 +343,7 @@
 
 .auth-roles {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 0.6rem;
   margin-bottom: 1.2rem;
 }
@@ -397,6 +409,11 @@
 
   .auth-title {
     font-size: 2.2rem;
+  }
+
+  .auth-roles {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
   }
 
   .auth-right {

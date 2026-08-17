@@ -1,70 +1,10 @@
 import { useMemo, useState } from 'react'
 import './HomePage.css'
-
-const activities = [
-  {
-    id: 'surfing',
-    name: 'Surfing lessons',
-    provider: "Ravi's Wave School · Verified",
-    price: 'From $25',
-    rating: '★ 4.9 · 128 reviews',
-    emoji: '🏄',
-    color: '#0e4f6e',
-    badge: 'Most popular',
-  },
-  {
-    id: 'dolphins',
-    name: 'Dolphin watching',
-    provider: 'Bay Adventures · Verified',
-    price: 'From $35',
-    rating: '★ 4.8 · 94 reviews',
-    emoji: '🐬',
-    color: '#185fa5',
-    badge: 'Morning only',
-  },
-  {
-    id: 'turtles',
-    name: 'Turtle watching',
-    provider: 'Eco Beach Tours · Verified',
-    price: 'From $20',
-    rating: '★ 4.7 · 61 reviews',
-    emoji: '🐢',
-    color: '#3b6d11',
-    badge: 'Seasonal',
-  },
-  {
-    id: 'snorkeling',
-    name: 'Snorkeling tour',
-    provider: 'Ocean Explorer LK · Verified',
-    price: 'From $30',
-    rating: '★ 4.8 · 77 reviews',
-    emoji: '🤿',
-    color: '#0c6b8a',
-  },
-  {
-    id: 'kayaking',
-    name: 'Sea kayaking',
-    provider: 'Surf Lanka Guides',
-    price: 'From $28',
-    rating: '★ 4.6 · 43 reviews',
-    emoji: '🛶',
-    color: '#854f0b',
-  },
-  {
-    id: 'diving',
-    name: 'Scuba diving',
-    provider: 'Deep Blue Divers · Verified',
-    price: 'From $60',
-    rating: '★ 4.9 · 38 reviews',
-    emoji: '🌊',
-    color: '#26215c',
-    badge: 'Certified req.',
-  },
-]
+import { activities } from '../data/activities'
 
 const quickBookOptions = ['Surfing', 'Dolphins', 'Turtles', 'Snorkeling', 'Kayaking', 'Diving']
 
-function HomePage({ userEmail, onLogout }) {
+function HomePage({ userEmail, onLogout, onActivitySelect }) {
   const [selectedQuickBook, setSelectedQuickBook] = useState('Surfing')
   const [notice, setNotice] = useState('')
 
@@ -232,7 +172,18 @@ function HomePage({ userEmail, onLogout }) {
                     <strong>{activity.price}</strong>
                     <span>{activity.rating}</span>
                   </div>
-                  <button type="button" onClick={() => handleAction(`Booking request started for ${activity.name}.`)}>Book</button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (onActivitySelect) {
+                        onActivitySelect(activity.id)
+                      } else {
+                        handleAction(`Viewing details for ${activity.name}.`)
+                      }
+                    }}
+                  >
+                    View details
+                  </button>
                 </div>
               </div>
             </article>

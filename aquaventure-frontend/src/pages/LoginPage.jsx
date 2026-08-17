@@ -4,17 +4,52 @@ import { login } from '../services/AuthService'
 
 function LoginPage({ onCreateAccount, onLoginSuccess }) {
   const [form, setForm] = useState({ email: '', password: '' })
+  const [errors, setErrors] = useState({})
   const [status, setStatus] = useState({ message: '', isError: false })
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const validateField = (name, value) => {
+    const fieldErrors = {}
+
+    switch (name) {
+      case 'email':
+        if (!value.trim()) {
+          fieldErrors.email = 'Email is required'
+        }
+        break
+      case 'password':
+        if (!value) {
+          fieldErrors.password = 'Password is required'
+        }
+        break
+    }
+
+    return fieldErrors
+  }
+
+  const validateForm = () => {
+    const allErrors = {}
+    Object.keys(form).forEach(key => {
+      const fieldErrors = validateField(key, form[key])
+      Object.assign(allErrors, fieldErrors)
+    })
+    setErrors(allErrors)
+    return Object.keys(allErrors).length === 0
+  }
 
   const handleChange = (event) => {
     const { name, value } = event.target
     setForm((current) => ({ ...current, [name]: value }))
+
+    // Clear field error on change
+    if (errors[name]) {
+      setErrors((current) => ({ ...current, [name]: '' }))
+    }
   }
 
   const handleSubmit = async () => {
-    if (!form.email || !form.password) {
-      setStatus({ message: 'Please enter email and password.', isError: true })
+    if (!validateForm()) {
+      setStatus({ message: 'Please correct the errors below.', isError: true })
       return
     }
 
@@ -22,20 +57,29 @@ function LoginPage({ onCreateAccount, onLoginSuccess }) {
     setStatus({ message: '', isError: false })
 
     try {
-      const response = await login(form)
-      const token = response.data
-      localStorage.setItem('authToken', token)
+      const user = await login(form)
+      localStorage.setItem('authToken', user.token)
       localStorage.setItem('authEmail', form.email)
+      localStorage.setItem('userRole', user.role)
       setStatus({ message: 'Signed in successfully.', isError: false })
       onLoginSuccess?.()
     } catch (error) {
       const apiData = error.response?.data
-      const message =
-        (typeof apiData === 'string' && apiData) ||
-        apiData?.message ||
-        apiData?.error ||
-        'Sign in failed. Please check your credentials.'
-      setStatus({ message, isError: true })
+
+      if (apiData?.errors) {
+        // Field-level errors from backend
+        setErrors(apiData.errors)
+        setStatus({ message: 'Please correct the validation errors.', isError: true })
+      } else {
+        // General error
+        const message =
+          (typeof apiData === 'string' && apiData) ||
+          apiData?.message ||
+          apiData?.error ||
+          'Sign in failed. Please check your credentials.'
+        setStatus({ message, isError: true })
+        setErrors({})
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -55,7 +99,9 @@ function LoginPage({ onCreateAccount, onLoginSuccess }) {
           placeholder="you@email.com"
           value={form.email}
           onChange={handleChange}
+          className={errors.email ? 'error' : ''}
         />
+        {errors.email && <span className="field-error">{errors.email}</span>}
       </div>
 
       <div className="auth-field">
@@ -67,7 +113,9 @@ function LoginPage({ onCreateAccount, onLoginSuccess }) {
           placeholder="••••••••"
           value={form.password}
           onChange={handleChange}
+          className={errors.password ? 'error' : ''}
         />
+        {errors.password && <span className="field-error">{errors.password}</span>}
       </div>
 
       <p className="auth-forgot">Forgot password?</p>
