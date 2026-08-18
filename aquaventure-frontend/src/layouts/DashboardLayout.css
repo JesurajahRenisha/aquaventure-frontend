@@ -1,0 +1,139 @@
+.dash-shell {
+  --primary: #0066cc;
+  --primary-hover: #0052a3;
+  --bg-sidebar: #061c33;
+  --bg-body: #f4f7fa;
+  --bg-card: #ffffff;
+  --border-color: #e2e8f0;
+  --text-dark: #0a1c30;
+  --text-light: #64748b;
+  --accent-green: #10b981;
+  --accent-red: #ef4444;
+  --accent-yellow: #f59e0b;
+  --font-main: 'Plus Jakarta Sans', sans-serif;
+  --font-display: 'Outfit', sans-serif;
+
+  font-family: var(--font-main);
+  background: var(--bg-body);
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+
+.dash-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 260px;
+  background: var(--bg-sidebar);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+  overflow-y: auto;
+}
+
+.dash-logo {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  padding: 0 24px 20px;
+}
+
+.dash-profile-widget {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 12px;
+}
+
+.dash-profile-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.dash-profile-widget h4 {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.dash-profile-widget p {
+  font-size: 12px;
+  color: #38bdf8;
+}
+
+.dash-menu {
+  list-style: none;
+  flex: 1;
+  padding: 0 12px;
+}
+
+.dash-menu-item a {
+  display: block;
+  padding: 10px 16px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  transition: all 0.2s;
+}
+
+.dash-menu-item a:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dash-menu-item a.active {
+  background: var(--primary);
+  color: white;
+}
+
+.dash-logout-btn {
+  margin: 12px 24px 0;
+  padding: 10px 16px;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.dash-logout-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.dash-main {
+  margin-left: 260px;
+  min-height: 100vh;
+}
+
+.dash-header {
+  background: var(--bg-card);
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dash-header h1 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.dash-content {
+  padding: 24px 32px;
+}

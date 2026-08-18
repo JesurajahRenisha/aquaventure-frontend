@@ -1,0 +1,119 @@
+:root {
+  --sidebar-width: 240px;
+}
+
+.surfer-shell {
+  font-family: var(--font-body);
+  background: var(--bg-main);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+.surfer-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
+  background: var(--dark-navy);
+  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.surfer-logo {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: white;
+  padding: 0 20px 16px;
+}
+
+.surfer-profile-widget {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+}
+
+.surfer-profile-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--primary-blue);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.surfer-profile-widget h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+}
+
+.surfer-profile-widget p {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.surfer-menu {
+  list-style: none;
+  flex: 1;
+  margin-top: 8px;
+}
+
+.surfer-menu-item a,
+.surfer-logout-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 12px 20px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.2s;
+}
+
+.surfer-menu-item a:hover,
+.surfer-logout-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.surfer-menu-item a.active {
+  background: rgba(0, 102, 204, 0.2);
+  color: white;
+  border-right: 3px solid var(--primary-blue);
+}
+
+.surfer-main {
+  margin-left: var(--sidebar-width);
+  min-height: 100vh;
+}
+
+.surfer-page-header {
+  background: white;
+  padding: 20px 40px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.surfer-page-header h1 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.surfer-content {
+  padding: 32px 40px;
+}
+
