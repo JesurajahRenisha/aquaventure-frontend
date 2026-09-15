@@ -64,11 +64,15 @@ const activities = [
 
 const quickBookOptions = ['Surfing', 'Dolphins', 'Turtles', 'Snorkeling', 'Kayaking', 'Diving']
 
-function HomePage({ userEmail, onLogout }) {
+function HomePage({ userEmail, userName: registeredName, onLogout }) {
   const [selectedQuickBook, setSelectedQuickBook] = useState('Surfing')
   const [notice, setNotice] = useState('')
 
   const userName = useMemo(() => {
+    if (registeredName) {
+      return registeredName
+    }
+
     if (!userEmail) {
       return 'Adventurer'
     }
@@ -79,7 +83,7 @@ function HomePage({ userEmail, onLogout }) {
     }
 
     return `${firstPart.charAt(0).toUpperCase()}${firstPart.slice(1)}`
-  }, [userEmail])
+  }, [registeredName, userEmail])
 
   const handleAction = (message) => {
     setNotice(message)
@@ -118,6 +122,7 @@ function HomePage({ userEmail, onLogout }) {
             onClick={() => {
               localStorage.removeItem('authToken')
               localStorage.removeItem('authEmail')
+              localStorage.removeItem('authName')
               onLogout?.()
             }}
           >

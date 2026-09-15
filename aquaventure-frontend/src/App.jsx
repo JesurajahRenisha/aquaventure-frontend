@@ -7,9 +7,10 @@ function App() {
   const [page, setPage] = useState(() => (localStorage.getItem('authToken') ? 'home' : 'login'))
 
   const authEmail = localStorage.getItem('authEmail')
+  const authName = localStorage.getItem('authName')
 
   if (page === 'home') {
-    return <HomePage userEmail={authEmail} onLogout={() => setPage('login')} />
+    return <HomePage userEmail={authEmail} userName={authName} onLogout={() => setPage('login')} />
   }
 
   if (page === 'register') {

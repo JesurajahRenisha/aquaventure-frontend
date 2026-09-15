@@ -26,6 +26,7 @@ function LoginPage({ onCreateAccount, onLoginSuccess }) {
       const token = response.data
       localStorage.setItem('authToken', token)
       localStorage.setItem('authEmail', form.email)
+      localStorage.removeItem('authName')
       setStatus({ message: 'Signed in successfully.', isError: false })
       onLoginSuccess?.()
     } catch (error) {

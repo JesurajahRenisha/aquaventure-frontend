@@ -31,13 +31,19 @@ function RegisterPage({ onSignIn, onRegisterSuccess }) {
       await register(form)
       setStatus({ message: 'Account created. You can now sign in.', isError: false })
       localStorage.setItem('authEmail', form.email)
+      localStorage.setItem('authName', `${form.firstname} ${form.lastname}`.trim())
       onRegisterSuccess?.()
     } catch (error) {
       const apiData = error.response?.data
+      const fieldErrors =
+        apiData && typeof apiData === 'object' && !apiData.message && !apiData.error
+          ? Object.values(apiData).join(' ')
+          : null
       const message =
         (typeof apiData === 'string' && apiData) ||
         apiData?.message ||
         apiData?.error ||
+        fieldErrors ||
         'Registration failed. Please try again.'
       setStatus({ message, isError: true })
     } finally {
