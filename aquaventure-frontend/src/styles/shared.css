@@ -236,3 +236,92 @@ textarea.form-input {
     grid-template-columns: 1fr;
   }
 }
+
+/* Approval-gate banner (school admin, pending/rejected/suspended states) */
+.approval-banner {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  text-align: center;
+  max-width: 560px;
+  margin: 40px auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.approval-banner h2 {
+  font-family: var(--font-display);
+  margin-bottom: 10px;
+}
+
+.approval-banner p {
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.approval-banner .btn {
+  margin: 0 6px;
+}
+
+/* Notifications bell */
+.notif-bell {
+  position: relative;
+  cursor: pointer;
+}
+
+.notif-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ef4444;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 1px 6px;
+  min-width: 16px;
+  text-align: center;
+}
+
+.notif-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 340px;
+  max-height: 420px;
+  overflow-y: auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(10, 20, 40, 0.18);
+  z-index: 200;
+}
+
+.notif-dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.notif-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.notif-item:hover {
+  background: var(--bg-main);
+}
+
+.notif-item.unread {
+  background: rgba(0, 102, 204, 0.05);
+  font-weight: 600;
+}
+
+.notif-item-time {
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 400;
+  margin-top: 4px;
+}

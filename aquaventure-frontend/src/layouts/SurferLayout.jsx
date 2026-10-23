@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import NotificationsBell from '../components/NotificationsBell'
 import '../styles/shared.css'
 import './SurferLayout.css'
 
@@ -10,9 +11,8 @@ const NAV_ITEMS = [
   { to: '/surfer/conditions', label: 'Surf Conditions' },
   { to: '/surfer/spots', label: 'Surf Spots' },
   { to: '/surfer/progress', label: 'Surf Progress' },
-  { to: '/surfer/book', label: 'Book Lessons' },
+  { to: '/schools', label: 'Find a School' },
   { to: '/surfer/bookings', label: 'Booking History' },
-  { to: '/surfer/settings', label: 'Settings' },
 ]
 
 function SurferLayout({ title, children }) {
@@ -30,9 +30,9 @@ function SurferLayout({ title, children }) {
         <div className="surfer-logo">AquaVenture</div>
 
         <div className="surfer-profile-widget">
-          <div className="surfer-profile-avatar">{(user?.name ?? 'S').charAt(0).toUpperCase()}</div>
+          <div className="surfer-profile-avatar">{(user?.firstname ?? 'S').charAt(0).toUpperCase()}</div>
           <div>
-            <h3>{user?.name ?? 'Surfer'}</h3>
+            <h3>{user?.firstname ? `${user.firstname} ${user.lastname ?? ''}` : 'Surfer'}</h3>
             <p>Surfer</p>
           </div>
         </div>
@@ -56,6 +56,7 @@ function SurferLayout({ title, children }) {
       <main className="surfer-main">
         <header className="surfer-page-header">
           <h1>{title}</h1>
+          <NotificationsBell />
         </header>
         <div className="surfer-content">{children}</div>
       </main>

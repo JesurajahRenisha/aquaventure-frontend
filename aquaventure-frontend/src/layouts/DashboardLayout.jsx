@@ -1,30 +1,31 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import NotificationsBell from '../components/NotificationsBell'
 import '../styles/shared.css'
 import './DashboardLayout.css'
 
-const PROVIDER_NAV = [
-  { to: '/provider', label: 'Dashboard', end: true },
-  { to: '/provider/services', label: 'Services' },
-  { to: '/provider/bookings', label: 'Bookings' },
-  { to: '/provider/instructors', label: 'Instructors' },
-  { to: '/provider/equipment', label: 'Equipment' },
-  { to: '/provider/profile', label: 'Profile' },
+const SCHOOL_NAV = [
+  { to: '/school', label: 'Dashboard', end: true },
+  { to: '/school/lessons', label: 'Lessons' },
+  { to: '/school/slots', label: 'Slots' },
+  { to: '/school/bookings', label: 'Bookings' },
+  { to: '/school/instructors', label: 'Instructors' },
+  { to: '/school/equipment', label: 'Equipment' },
+  { to: '/school/profile', label: 'Profile' },
 ]
 
 const ADMIN_NAV = [
   { to: '/admin', label: 'Dashboard', end: true },
   { to: '/admin/users', label: 'Users' },
-  { to: '/admin/providers', label: 'Providers' },
+  { to: '/admin/schools', label: 'Schools' },
   { to: '/admin/locations', label: 'Surf Locations' },
-  { to: '/admin/bookings', label: 'Bookings' },
 ]
 
 function DashboardLayout({ role, title, children }) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
-  const navItems = role === 'ADMIN' ? ADMIN_NAV : PROVIDER_NAV
-  const roleLabel = role === 'ADMIN' ? 'Administrator' : 'Surf Provider'
+  const navItems = role === 'PLATFORM_ADMIN' ? ADMIN_NAV : SCHOOL_NAV
+  const roleLabel = role === 'PLATFORM_ADMIN' ? 'Administrator' : 'Surf School'
 
   const handleLogout = () => {
     logout()
@@ -37,9 +38,9 @@ function DashboardLayout({ role, title, children }) {
         <div className="dash-logo">AquaVenture</div>
 
         <div className="dash-profile-widget">
-          <div className="dash-profile-avatar">{(user?.name ?? 'U').charAt(0).toUpperCase()}</div>
+          <div className="dash-profile-avatar">{(user?.firstname ?? 'U').charAt(0).toUpperCase()}</div>
           <div>
-            <h4>{user?.name ?? roleLabel}</h4>
+            <h4>{user?.firstname ? `${user.firstname} ${user.lastname ?? ''}` : roleLabel}</h4>
             <p>{roleLabel}</p>
           </div>
         </div>
@@ -62,6 +63,7 @@ function DashboardLayout({ role, title, children }) {
       <main className="dash-main">
         <header className="dash-header">
           <h1>{title}</h1>
+          <NotificationsBell />
         </header>
         <div className="dash-content">{children}</div>
       </main>
