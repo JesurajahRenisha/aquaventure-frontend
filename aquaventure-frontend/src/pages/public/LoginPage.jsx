@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import '../../layouts/AuthLayout.css'
 
-const HOME_BY_ROLE = { SURFER: '/surfer', PROVIDER: '/provider', ADMIN: '/admin', INSTRUCTOR: '/surfer' }
+const HOME_BY_ROLE = { SURFER: '/surfer', SCHOOL_ADMIN: '/school', PLATFORM_ADMIN: '/admin' }
 
 function LoginPage() {
   const { login } = useAuth()

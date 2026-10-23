@@ -2,20 +2,19 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import '../../styles/shared.css'
 import './LandingPage.css'
-import { listLocations } from '../../api/locationsApi'
-import { getWeatherForLocation } from '../../api/weatherApi'
+import { listLocations, getConditions } from '../../api/locationsApi'
 
-function conditionLabel(weather) {
-  if (!weather) return null
-  const { waveHeight, windSpeed } = weather
-  if (waveHeight <= 1.5 && windSpeed <= 20) return { text: 'Good', className: 'good' }
-  if (waveHeight <= 2.5 && windSpeed <= 30) return { text: 'Caution', className: 'caution' }
-  return { text: 'Rough', className: 'rough' }
+function conditionLabel(today) {
+  if (!today) return null
+  const level = today.suitability?.BEGINNER
+  if (level === 'SUITABLE') return { text: 'Good', className: 'good' }
+  if (level === 'NOT_SUITABLE') return { text: 'Caution', className: 'caution' }
+  return null
 }
 
 function LandingPage() {
   const [locations, setLocations] = useState([])
-  const [weather, setWeather] = useState(null)
+  const [conditions, setConditions] = useState(null)
   const [search, setSearch] = useState('')
 
   useEffect(() => {
@@ -23,8 +22,8 @@ function LandingPage() {
       .then((locs) => {
         setLocations(locs)
         if (locs[0]) {
-          getWeatherForLocation(locs[0].locationId)
-            .then(setWeather)
+          getConditions(locs[0].id)
+            .then(setConditions)
             .catch(() => {})
         }
       })
@@ -32,11 +31,12 @@ function LandingPage() {
   }, [])
 
   const filteredLocations = useMemo(
-    () => locations.filter((l) => l.locationName.toLowerCase().includes(search.toLowerCase())),
+    () => locations.filter((l) => l.name.toLowerCase().includes(search.toLowerCase())),
     [locations, search],
   )
 
-  const condition = conditionLabel(weather)
+  const today = conditions?.days?.[0]
+  const condition = conditionLabel(today)
 
   return (
     <div className="landing">
@@ -52,7 +52,7 @@ function LandingPage() {
           <li><a href="#home">Home</a></li>
           <li><a href="#about">About Us</a></li>
           <li><a href="#locations">Surf Locations</a></li>
-          <li><a href="#providers">Surf Providers</a></li>
+          <li><a href="#schools">Surf Schools</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
         <div className="landing-nav-actions">
@@ -97,8 +97,8 @@ function LandingPage() {
             <div className="hero-search-results">
               {filteredLocations.length === 0 && <p>No matching surf spots.</p>}
               {filteredLocations.slice(0, 4).map((l) => (
-                <Link key={l.locationId} to="/register" className="hero-search-result">
-                  {l.locationName} <small>{l.difficultyLevel}</small>
+                <Link key={l.id} to="/schools" className="hero-search-result">
+                  {l.name} <small>{l.region}</small>
                 </Link>
               ))}
             </div>
@@ -107,17 +107,17 @@ function LandingPage() {
           <div className="hero-stats">
             <div className="hero-stat">
               <span className="hs-icon">⚙</span>
-              <strong>{weather ? `${weather.temperature}°C` : '--'}</strong>
+              <strong>{today ? `${Math.round(today.avgTemperatureC)}°C` : '--'}</strong>
               <small>Air Temp</small>
             </div>
             <div className="hero-stat">
               <span className="hs-icon">〜</span>
-              <strong>{weather ? `${weather.waveHeight}m` : '--'}</strong>
+              <strong>{today ? `${today.maxWaveHeightM}m` : '--'}</strong>
               <small>Wave Height</small>
             </div>
             <div className="hero-stat">
               <span className="hs-icon">≋</span>
-              <strong>{weather ? `${weather.windSpeed} km/h` : '--'}</strong>
+              <strong>{today ? `${Math.round(today.avgWindSpeedKmh)} km/h` : '--'}</strong>
               <small>Wind Speed</small>
             </div>
             <div className={`hero-stat condition ${condition?.className ?? ''}`}>
@@ -126,8 +126,8 @@ function LandingPage() {
             </div>
           </div>
 
-          <Link to="/register" className="btn-primary-link large full">
-            Explore Surf Spots →
+          <Link to="/schools" className="btn-primary-link large full">
+            Explore Surf Schools →
           </Link>
         </div>
       </section>
@@ -142,15 +142,15 @@ function LandingPage() {
         <div className="landing-features">
           <div className="feature-card">
             <h3>Real-time Conditions</h3>
-            <p>Wave height, wind speed and safety flags per surf spot, updated continuously.</p>
+            <p>Wave height, wind speed and per-skill-level suitability for every surf spot.</p>
           </div>
           <div className="feature-card">
             <h3>Smart Recommendations</h3>
-            <p>Matched to your skill level, booking history and the day's conditions.</p>
+            <p>Matched to your skill level and preferred location.</p>
           </div>
           <div className="feature-card">
-            <h3>Book Verified Instructors</h3>
-            <p>Browse surf schools, pick a lesson, and confirm your booking instantly.</p>
+            <h3>Book Verified Schools</h3>
+            <p>Browse surf schools, pick a lesson slot, and confirm your booking instantly.</p>
           </div>
         </div>
       </section>
@@ -158,30 +158,28 @@ function LandingPage() {
       <section id="locations" className="landing-section alt">
         <div className="section-tag">Explore</div>
         <h2>Popular Surf Locations</h2>
-        <p className="section-sub">Handpicked surf spots rated by difficulty and safety, straight from our database.</p>
+        <p className="section-sub">Handpicked surf spots across Sri Lanka's Eastern Province, straight from our database.</p>
         <div className="locations-grid">
           {locations.length === 0 && <p className="empty-state">Surf locations will appear here.</p>}
           {locations.slice(0, 6).map((l) => (
-            <div key={l.locationId} className="location-card">
-              <h4>{l.locationName}</h4>
-              <span className={`status-badge status-${l.difficultyLevel === 'BEGINNER' ? 'active' : l.difficultyLevel === 'ADVANCED' ? 'inactive' : 'pending'}`}>
-                {l.difficultyLevel}
-              </span>
-              <p>Safety rating: {l.safetyRating} / 5</p>
+            <div key={l.id} className="location-card">
+              <h4>{l.name}</h4>
+              <span className="status-badge status-active">{l.region}</span>
+              <p>{l.description}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section id="providers" className="landing-section">
+      <section id="schools" className="landing-section">
         <div className="section-tag">Trusted Network</div>
-        <h2>Surf Providers</h2>
+        <h2>Surf Schools</h2>
         <p className="section-sub">
-          Every lesson on AquaVenture is run by a registered surf school or instructor. Providers manage their own
-          services, equipment and booking requests through their own dashboard.
+          Every lesson on AquaVenture is run by a registered, platform-approved surf school. Schools manage their own
+          lessons, equipment and booking requests through their own dashboard.
         </p>
         <Link to="/register" className="btn-primary-link large">
-          Register as a Surf Provider
+          Register Your Surf School
         </Link>
       </section>
 
