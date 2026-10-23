@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, useState } from 'react'
-import { login as loginApi, register as registerApi } from '../api/authApi'
+import { login as loginApi, registerSurfer as registerSurferApi, registerSchool as registerSchoolApi } from '../api/authApi'
 
 const AuthContext = createContext(null)
 
@@ -29,8 +29,21 @@ export function AuthProvider({ children }) {
     return response
   }
 
-  const register = async (data) => {
-    await registerApi(data)
+  const registerSurfer = async (data) => {
+    await registerSurferApi(data)
+  }
+
+  const registerSchool = async (formData) => {
+    await registerSchoolApi(formData)
+  }
+
+  const setSchoolStatus = (schoolStatus) => {
+    setUser((prev) => {
+      if (!prev) return prev
+      const next = { ...prev, schoolStatus }
+      localStorage.setItem('authUser', JSON.stringify(next))
+      return next
+    })
   }
 
   const logout = () => {
@@ -39,7 +52,10 @@ export function AuthProvider({ children }) {
     setUser(null)
   }
 
-  const value = useMemo(() => ({ user, login, register, logout }), [user])
+  const value = useMemo(
+    () => ({ user, login, registerSurfer, registerSchool, setSchoolStatus, logout }),
+    [user]
+  )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

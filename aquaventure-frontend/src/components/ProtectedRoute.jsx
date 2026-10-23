@@ -10,7 +10,7 @@ function ProtectedRoute({ role, children }) {
   }
 
   if (role && user.role !== role) {
-    const home = { SURFER: '/surfer', PROVIDER: '/provider', ADMIN: '/admin' }[user.role] ?? '/login'
+    const home = { SURFER: '/surfer', SCHOOL_ADMIN: '/school', PLATFORM_ADMIN: '/admin' }[user.role] ?? '/login'
     return <Navigate to={home} replace />
   }
 
