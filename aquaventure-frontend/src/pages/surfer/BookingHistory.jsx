@@ -1,20 +1,28 @@
 import { useEffect, useState } from 'react'
 import SurferLayout from '../../layouts/SurferLayout'
-import { useAuth } from '../../context/AuthContext'
-import { searchBookings } from '../../api/bookingsApi'
+import { getMyBookings, cancelBooking } from '../../api/surferApi'
+
+const CANCELLABLE = ['PENDING', 'ACCEPTED']
 
 function BookingHistory() {
-  const { user } = useAuth()
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    if (!user?.profileId) return
-    searchBookings({ touristId: user.profileId })
-      .then((data) => data.sort((a, b) => new Date(b.bookingDate) - new Date(a.bookingDate)))
+  const load = () =>
+    getMyBookings()
+      .then((page) => (page.content ?? []).sort((a, b) => new Date(b.slotStartTime) - new Date(a.slotStartTime)))
       .then(setBookings)
       .finally(() => setLoading(false))
-  }, [user])
+
+  useEffect(() => {
+    load()
+  }, [])
+
+  const handleCancel = async (id) => {
+    if (!window.confirm('Cancel this booking?')) return
+    await cancelBooking(id)
+    load()
+  }
 
   return (
     <SurferLayout title="Booking History">
@@ -22,29 +30,34 @@ function BookingHistory() {
         {loading && <p style={{ padding: 24 }}>Loading...</p>}
         {!loading && bookings.length === 0 && <p className="empty-state">You have no bookings yet.</p>}
         {!loading && bookings.length > 0 && (
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead style={{ background: '#f9fafb' }}>
+          <table className="data-table">
+            <thead>
               <tr>
-                <th style={th}>Activity</th>
-                <th style={th}>Provider</th>
-                <th style={th}>Date</th>
-                <th style={th}>Price</th>
-                <th style={th}>Status</th>
-                <th style={th}>Payment</th>
+                <th>Lesson</th>
+                <th>School</th>
+                <th>Date</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               {bookings.map((b) => (
-                <tr key={b.bookingId} style={{ borderTop: '1px solid var(--border-color)' }}>
-                  <td style={td}>{b.activityName}</td>
-                  <td style={td}>{b.providerBusinessName}</td>
-                  <td style={td}>{new Date(b.bookingDate).toLocaleString()}</td>
-                  <td style={td}>${b.price}</td>
-                  <td style={td}>
+                <tr key={b.id}>
+                  <td>{b.lessonTitle}</td>
+                  <td>{b.schoolName}</td>
+                  <td>{new Date(b.slotStartTime).toLocaleString()}</td>
+                  <td>{b.currency} {b.totalPrice}</td>
+                  <td>
                     <span className={`status-badge status-${b.status.toLowerCase()}`}>{b.status}</span>
                   </td>
-                  <td style={td}>
-                    <span className={`status-badge status-${b.paymentStatus.toLowerCase()}`}>{b.paymentStatus}</span>
+                  <td>
+                    {CANCELLABLE.includes(b.status) && (
+                      <button type="button" className="btn btn-danger" onClick={() => handleCancel(b.id)}>Cancel</button>
+                    )}
+                    {b.status === 'COMPLETED' && (
+                      <a href="/surfer/progress" className="btn btn-secondary">Progress</a>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -55,8 +68,5 @@ function BookingHistory() {
     </SurferLayout>
   )
 }
-
-const th = { padding: '14px 20px', textAlign: 'left', fontSize: 12, textTransform: 'uppercase', color: 'var(--text-secondary)' }
-const td = { padding: '14px 20px', fontSize: 14 }
 
 export default BookingHistory

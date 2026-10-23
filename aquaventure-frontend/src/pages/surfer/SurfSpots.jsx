@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
 import SurferLayout from '../../layouts/SurferLayout'
-import { listLocations } from '../../api/locationsApi'
-import { getWeatherForLocation } from '../../api/weatherApi'
+import { listLocations, getConditions } from '../../api/locationsApi'
 
 function SurfSpots() {
   const [locations, setLocations] = useState([])
-  const [weatherById, setWeatherById] = useState({})
+  const [conditionsById, setConditionsById] = useState({})
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -15,13 +14,13 @@ function SurfSpots() {
         const entries = await Promise.all(
           list.map(async (loc) => {
             try {
-              return [loc.locationId, await getWeatherForLocation(loc.locationId)]
+              return [loc.id, await getConditions(loc.id)]
             } catch {
-              return [loc.locationId, null]
+              return [loc.id, null]
             }
           }),
         )
-        setWeatherById(Object.fromEntries(entries))
+        setConditionsById(Object.fromEntries(entries))
       })
       .finally(() => setLoading(false))
   }, [])
@@ -31,18 +30,16 @@ function SurfSpots() {
       {loading && <p>Loading...</p>}
       <div className="grid-3">
         {locations.map((loc) => {
-          const w = weatherById[loc.locationId]
+          const today = conditionsById[loc.id]?.days?.[0]
           return (
-            <div key={loc.locationId} className="card">
-              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 17, marginBottom: 4 }}>{loc.locationName}</h3>
-              <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 12 }}>
-                Difficulty: {loc.difficultyLevel} &middot; Safety {loc.safetyRating}/5
-              </p>
-              {w && (
+            <div key={loc.id} className="card">
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 17, marginBottom: 4 }}>{loc.name}</h3>
+              <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 12 }}>{loc.region}</p>
+              {today && (
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                  <span className="status-badge status-good">{w.waveHeight} m waves</span>
-                  <span className="status-badge status-pending">{w.windSpeed} km/h wind</span>
-                  <span className="status-badge status-confirmed">{w.temperature}&deg;C</span>
+                  <span className="status-badge status-good">{today.maxWaveHeightM} m waves</span>
+                  <span className="status-badge status-pending">{Math.round(today.avgWindSpeedKmh)} km/h wind</span>
+                  <span className="status-badge status-confirmed">{Math.round(today.avgTemperatureC)}&deg;C</span>
                 </div>
               )}
             </div>

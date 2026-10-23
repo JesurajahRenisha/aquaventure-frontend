@@ -1,53 +1,40 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import SurferLayout from '../../layouts/SurferLayout'
-import { useAuth } from '../../context/AuthContext'
-import { listRecommendationsForTourist, generateRecommendations } from '../../api/recommendationsApi'
+import { getRecommendations } from '../../api/surferApi'
 
 function SurfRecommendation() {
-  const { user } = useAuth()
   const [recommendations, setRecommendations] = useState([])
   const [loading, setLoading] = useState(true)
 
-  const load = async () => {
-    if (!user?.profileId) return
-    setLoading(true)
-    const list = await listRecommendationsForTourist(user.profileId)
-    setRecommendations(list)
-    setLoading(false)
-  }
-
   useEffect(() => {
-    load()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user])
-
-  const handleGenerate = async () => {
-    if (!user?.profileId) return
-    setLoading(true)
-    const list = await generateRecommendations(user.profileId)
-    setRecommendations(list)
-    setLoading(false)
-  }
+    getRecommendations().then(setRecommendations).finally(() => setLoading(false))
+  }, [])
 
   return (
     <SurferLayout title="Surf Recommendation">
-      <div style={{ marginBottom: 20 }}>
-        <button type="button" className="btn btn-primary" onClick={handleGenerate} disabled={loading}>
-          {loading ? 'Analyzing...' : 'Generate New Recommendations'}
-        </button>
-      </div>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: 20 }}>
+        Matched to your skill level and preferred location — update these on your profile to refine them.
+      </p>
+
+      {loading && <p>Loading...</p>}
 
       <div className="grid-2">
         {recommendations.map((rec) => (
-          <div key={rec.recommendationId} className="card">
+          <div key={rec.lessonId} className="card">
             <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 18, color: 'var(--primary-blue)' }}>
-              {rec.locationName}
+              {rec.title}
             </h3>
-            <p style={{ color: 'var(--text-secondary)', marginTop: 8 }}>{rec.recommendationReason}</p>
+            <p style={{ color: 'var(--text-secondary)', marginTop: 4 }}>{rec.schoolName} &middot; {rec.locationName}</p>
+            <p style={{ fontWeight: 700, margin: '8px 0' }}>{rec.currency} {rec.price}</p>
+            <p style={{ color: 'var(--text-secondary)' }}>{rec.matchReason}</p>
+            <Link to={`/schools/${rec.schoolId}`} className="btn btn-primary" style={{ marginTop: 12, display: 'inline-block' }}>
+              View School
+            </Link>
           </div>
         ))}
         {!loading && recommendations.length === 0 && (
-          <p className="empty-state">No recommendations yet -- click generate above.</p>
+          <p className="empty-state">No recommendations yet — set your skill level and preferred location on your profile.</p>
         )}
       </div>
     </SurferLayout>
