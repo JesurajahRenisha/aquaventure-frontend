@@ -25,6 +25,14 @@ function handleAuthError(error) {
   return Promise.reject(error)
 }
 
-apiClient.interceptors.response.use((response) => response, handleAuthError)
+function unwrapEnvelope(response) {
+  const body = response.data
+  if (body && typeof body === 'object' && 'success' in body && 'data' in body) {
+    response.data = body.data
+  }
+  return response
+}
+
+apiClient.interceptors.response.use(unwrapEnvelope, handleAuthError)
 
 export default apiClient
