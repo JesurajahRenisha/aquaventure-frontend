@@ -1,78 +1,87 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import DashboardLayout from '../../layouts/DashboardLayout'
-import apiClient from '../../api/apiClient'
-import { searchBookings } from '../../api/bookingsApi'
+import { getStats } from '../../api/adminApi'
 
 function AdminDashboard() {
-  const [users, setUsers] = useState([])
-  const [bookings, setBookings] = useState([])
+  const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    Promise.all([
-      apiClient.get('/users').then((r) => r.data).catch(() => []),
-      searchBookings(),
-    ])
-      .then(([userList, bookingList]) => {
-        setUsers(userList)
-        setBookings(bookingList)
-      })
-      .finally(() => setLoading(false))
+    getStats().then(setStats).finally(() => setLoading(false))
   }, [])
 
-  const providers = users.filter((u) => u.role === 'PROVIDER')
-  const surfers = users.filter((u) => u.role === 'SURFER')
+  const totalUsers = stats ? Object.values(stats.usersByRole ?? {}).reduce((a, b) => a + b, 0) : 0
+  const totalBookings = stats ? Object.values(stats.bookingsByStatus ?? {}).reduce((a, b) => a + b, 0) : 0
 
   return (
-    <DashboardLayout role="ADMIN" title="Platform Overview">
+    <DashboardLayout role="PLATFORM_ADMIN" title="Platform Overview">
       {loading && <p>Loading...</p>}
-      {!loading && (
+      {!loading && stats && (
         <>
           <section className="grid-4" style={{ marginBottom: 24 }}>
             <div className="stat-box">
               <div className="stat-label">Total Users</div>
-              <div className="stat-value">{users.length}</div>
+              <div className="stat-value">{totalUsers}</div>
             </div>
             <div className="stat-box">
-              <div className="stat-label">Surfers</div>
-              <div className="stat-value">{surfers.length}</div>
+              <div className="stat-label">Schools Pending</div>
+              <div className="stat-value">{stats.schoolsByStatus?.PENDING ?? 0}</div>
             </div>
             <div className="stat-box">
-              <div className="stat-label">Providers</div>
-              <div className="stat-value">{providers.length}</div>
+              <div className="stat-label">Schools Approved</div>
+              <div className="stat-value">{stats.schoolsByStatus?.APPROVED ?? 0}</div>
             </div>
             <div className="stat-box">
               <div className="stat-label">Total Bookings</div>
-              <div className="stat-value">{bookings.length}</div>
+              <div className="stat-value">{totalBookings}</div>
             </div>
           </section>
 
-          <div className="card">
-            <h2 className="card-title">Recent Bookings (platform-wide)</h2>
-            {bookings.length === 0 && <p className="empty-state">No bookings yet.</p>}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {bookings
-                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                .slice(0, 10)
-                .map((b) => (
-                  <div
-                    key={b.bookingId}
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      padding: 12,
-                      border: '1px solid var(--border-color)',
-                      borderRadius: 8,
-                    }}
-                  >
-                    <span>
-                      {b.touristName} &middot; {b.activityName} ({b.providerBusinessName})
-                    </span>
-                    <span className={`status-badge status-${b.status.toLowerCase()}`}>{b.status}</span>
-                  </div>
-                ))}
+          <div className="grid-2">
+            <div className="card">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                <h2 className="card-title" style={{ marginBottom: 0 }}>Users by Role</h2>
+              </div>
+              {Object.entries(stats.usersByRole ?? {}).map(([role, count]) => (
+                <div key={role} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--border-color)' }}>
+                  <span>{role}</span>
+                  <strong>{count}</strong>
+                </div>
+              ))}
+            </div>
+
+            <div className="card">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                <h2 className="card-title" style={{ marginBottom: 0 }}>Bookings by Status</h2>
+              </div>
+              {Object.entries(stats.bookingsByStatus ?? {}).map(([status, count]) => (
+                <div key={status} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--border-color)' }}>
+                  <span className={`status-badge status-${status.toLowerCase()}`}>{status}</span>
+                  <strong>{count}</strong>
+                </div>
+              ))}
             </div>
           </div>
+
+          <div className="card" style={{ marginTop: 24 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+              <h2 className="card-title" style={{ marginBottom: 0 }}>Bookings by Location</h2>
+            </div>
+            {Object.entries(stats.bookingsByLocation ?? {}).map(([location, count]) => (
+              <div key={location} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--border-color)' }}>
+                <span>{location}</span>
+                <strong>{count}</strong>
+              </div>
+            ))}
+          </div>
+
+          {stats.schoolsByStatus?.PENDING > 0 && (
+            <div className="card" style={{ marginTop: 24, borderLeft: '4px solid var(--accent-orange)' }}>
+              <strong>{stats.schoolsByStatus.PENDING} school(s) awaiting review.</strong>{' '}
+              <Link to="/admin/schools" style={{ color: 'var(--primary-blue)', fontWeight: 600 }}>Go to review queue →</Link>
+            </div>
+          )}
         </>
       )}
     </DashboardLayout>
